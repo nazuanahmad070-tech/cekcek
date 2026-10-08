@@ -4,120 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Auto Order - Toko Online</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-  body {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
-  .container {
-    background: #fff;
-    width: 100%;
-    max-width: 500px;
-    border-radius: 16px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    padding: 30px;
-  }
-  h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 24px;
-  }
-  h1 span { color: #667eea; }
-  .form-group {
-    margin-bottom: 15px;
-  }
-  label {
-    display: block;
-    margin-bottom: 6px;
-    color: #555;
-    font-size: 14px;
-    font-weight: 600;
-  }
-  input, select, textarea {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: 0.3s;
-  }
-  input:focus, select:focus, textarea:focus {
-    border-color: #667eea;
-    outline: none;
-  }
-  .produk-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-  .produk-item {
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 13px;
-  }
-  .produk-item:hover, .produk-item.active {
-    border-color: #667eea;
-    background: #f0f4ff;
-  }
-  .produk-item .harga {
-    color: #667eea;
-    font-weight: bold;
-    display: block;
-    margin-top: 4px;
-  }
-  .total-box {
-    background: #f0f4ff;
-    padding: 15px;
-    border-radius: 8px;
-    margin: 15px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    color: #333;
-  }
-  .total-box .total-harga {
-    color: #667eea;
-    font-size: 20px;
-  }
-  button {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102,126,234,0.4);
-  }
-  .notif {
-    display: none;
-    background: #d4edda;
-    color: #155724;
-    padding: 12px;
-    border-radius: 8px;
-    margin-top: 15px;
-    text-align: center;
-    font-size: 14px;
-  }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -178,92 +65,14 @@
       <span class="total-harga" id="totalHarga">Rp 0</span>
     </div>
 
-    <button type="submit">🚀 Pesan Sekarang</button>
+    <button type="submit" id="btnSubmit">🚀 Pesan Sekarang</button>
   </form>
 
   <div class="notif" id="notif">✅ Pesanan berhasil dikirim!</div>
+
+  <a href="admin.html" class="admin-link">🔐 Dashboard Admin</a>
 </div>
 
-<script>
-  const produkItems = document.querySelectorAll('.produk-item');
-  const jumlahInput = document.getElementById('jumlah');
-  const totalHargaEl = document.getElementById('totalHarga');
-  let produkTerpilih = null;
-
-  // Pilih produk
-  produkItems.forEach(item => {
-    item.addEventListener('click', () => {
-      produkItems.forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-      produkTerpilih = {
-        nama: item.dataset.nama,
-        harga: parseInt(item.dataset.harga)
-      };
-      hitungTotal();
-    });
-  });
-
-  // Hitung total
-  jumlahInput.addEventListener('input', hitungTotal);
-
-  function hitungTotal() {
-    if (!produkTerpilih) {
-      totalHargaEl.textContent = 'Rp 0';
-      return;
-    }
-    const jumlah = parseInt(jumlahInput.value) || 1;
-    const total = produkTerpilih.harga * jumlah;
-    totalHargaEl.textContent = 'Rp ' + total.toLocaleString('id-ID');
-  }
-
-  // Submit form
-  document.getElementById('orderForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    if (!produkTerpilih) {
-      alert('Silakan pilih produk terlebih dahulu!');
-      return;
-    }
-
-    const nama = document.getElementById('nama').value;
-    const wa = document.getElementById('wa').value;
-    const alamat = document.getElementById('alamat').value;
-    const jumlah = jumlahInput.value;
-    const bayar = document.getElementById('bayar').value;
-    const total = produkTerpilih.harga * jumlah;
-
-    // Format pesan WhatsApp
-    const pesan = 
-`🛒 *PESANAN BARU*
-━━━━━━━━━━━━━━━
-👤 Nama: ${nama}
-📱 WA: ${wa}
-📍 Alamat: ${alamat}
-━━━━━━━━━━━━━━━
-📦 Produk: ${produkTerpilih.nama}
-🔢 Jumlah: ${jumlah}
-💰 Total: Rp ${total.toLocaleString('id-ID')}
-💳 Pembayaran: ${bayar}
-━━━━━━━━━━━━━━━
-Mohon diproses ya 🙏`;
-
-    // Ganti nomor di bawah dengan nomor WA admin
-    const nomorAdmin = '6288225731448';
-    const url = `https://wa.me/${nomorAdmin}?text=${encodeURIComponent(pesan)}`;
-    window.open(url, '_blank');
-
-    // Tampilkan notifikasi
-    const notif = document.getElementById('notif');
-    notif.style.display = 'block';
-    setTimeout(() => notif.style.display = 'none', 3000);
-
-    // Reset form
-    this.reset();
-    produkItems.forEach(i => i.classList.remove('active'));
-    produkTerpilih = null;
-    totalHargaEl.textContent = 'Rp 0';
-  });
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
